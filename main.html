@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Keypad Login</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+    <div class="container">
+        <h2>Random Grid Number Generator</h2>
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="text" id="password" placeholder="Enter Password">
+        <div class="keypad" id="keypad">
+            <button class="key"></button>
+            <button class="key"></button>
+            <button class="key"></button>
+            <button class="key"></button>
+            <button class="key"></button>
+            <button class="key"></button>
+            <button class="key"></button>
+            <button class="key"></button>
+            <button class="key"></button>
+        </div>
+        <div class="buttons">
+            <button class="clear-btn" onclick="clearPassword()">Clear</button>
+            <button class="enter-btn" onclick="submitLogin()">Enter</button>
+        </div>
+    </div>
+
+    <script>
+        let generatedUsername = ""; // Store the generated username
+    
+        function generateRandomUsername() {
+            const usernameInput = document.getElementById("username");
+            generatedUsername = Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
+            usernameInput.value = generatedUsername;
+        }
+    
+        function generateRandomKeypad() {
+            let numbers = [...Array(9).keys()].map(n => n + 1); // [1,2,3,4,5,6,7,8,9]
+            numbers.sort(() => Math.random() - 0.5); // Shuffle numbers
+    
+            const keypad = document.getElementById("keypad");
+            keypad.innerHTML = "";
+    
+            numbers.forEach(num => {
+                const key = document.createElement("button");
+                key.className = "key";
+                key.innerText = num;
+                key.onclick = () => addToPassword(num);
+                keypad.appendChild(key);
+            });
+    
+            // Add a reload symbol button
+            const reloadKey = document.createElement("button");
+            reloadKey.className = "key reload-symbol";
+            reloadKey.innerText = "⟳"; // Reload symbol
+            reloadKey.onclick = generateRandomKeypad;
+            keypad.appendChild(reloadKey);
+    
+            // Add 0 to the center of the last row
+            const zeroKey = document.createElement("button");
+            zeroKey.className = "key zero-key";
+            zeroKey.innerText = 0;
+            zeroKey.onclick = () => addToPassword(0);
+            keypad.appendChild(zeroKey);
+    
+            // Add a backspace symbol on the right
+            const backspaceKey = document.createElement("button");
+            backspaceKey.className = "key backspace-symbol";
+            backspaceKey.innerText = "←";
+            backspaceKey.onclick = removeLastCharacter;
+            keypad.appendChild(backspaceKey);
+        }
+    
+        function addToPassword(num) {
+            const passwordInput = document.getElementById("password");
+            passwordInput.value += num; // Append number to password input
+        }
+    
+        function removeLastCharacter() {
+            const passwordInput = document.getElementById("password");
+            passwordInput.value = passwordInput.value.slice(0, -1); // Remove last character
+        }
+    
+        function clearPassword() {
+            document.getElementById("password").value = "";
+        }
+    
+        function submitLogin() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+    
+            if (username.trim() === "" || password.trim() === "") {
+                alert("Please enter both username and password.");
+                return;
+            }
+    
+            if (password !== generatedUsername.toString()) {
+                alert("Incorrect password! Password must match the generated username.");
+                return;
+            }
+    
+            alert("Login Successful!\nUsername: " + username);
+        }
+    
+        // Generate a random username on page load
+        window.onload = () => {
+            generateRandomUsername();
+            generateRandomKeypad();
+        };
+            document.getElementById("username").addEventListener("click", generateRandomUsername);
+    
+        setInterval(generateRandomKeypad, 30000); // Refresh keypad every 30 seconds
+    </script>
+    
+</body>
+
+</html>

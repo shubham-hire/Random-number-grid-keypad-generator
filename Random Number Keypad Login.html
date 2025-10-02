@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<!-- saved from url=(0041)http://127.0.0.1:5500/hackathon/main.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Keypad Login</title>
+    <link rel="stylesheet" href="./Random Number Keypad Login_files/style.css">
+
+<!-- Code injected by Five-server -->
+  <script async="" data-id="five-server" data-file="/Users/shubham/Desktop/Web Developement/projects/hackathon/main.html" type="application/javascript" src="./Random Number Keypad Login_files/fiveserver.js"></script>
+  <style>      
+      /* Injected by five-server */
+      /*[data-highlight="true"] {
+        border: 1px rgb(90,170,255) solid !important;
+        background-color: rgba(155,215,255,0.5);
+        animation: fadeOutHighlight 1s forwards 0.5s;
+      }
+      img[data-highlight="true"] {
+        filter: sepia(100%) hue-rotate(180deg) saturate(200%);
+        animation: fadeOutHighlightIMG 0.5s forwards 0.5s;
+      }*/
+      @keyframes fadeOutHighlight {
+        from {background-color: rgba(155,215,255,0.5);}
+        to {background-color: rgba(155,215,255,0);}
+      }      
+      @keyframes fadeOutHighlightIMG {
+        0% {filter: sepia(100%) hue-rotate(180deg) saturate(200%);}
+        33% {filter: sepia(66%) hue-rotate(180deg) saturate(100%);}
+        50% {filter: sepia(50%) hue-rotate(90deg) saturate(50%);}
+        66% {filter: sepia(33%) hue-rotate(0deg) saturate(100%);}
+        100% {filter: sepia(0%) hue-rotate(0deg) saturate(100%);}
+      }
+      @keyframes fiveserverInfoPopup {
+        0%   {top:-40px;}
+        15%  {top:4px;}
+        85%  {top:4px;}
+        100% {top:-40px;}
+      }
+      /*smaller*/
+      @media (max-width: 640px) {
+        #fiveserver-info-wrapper {
+          max-width: 98%;
+        }
+        #fiveserver-info {
+          border-radius: 0px;
+        }      
+      }
+
+      </style></head>
+
+<body>
+    <div class="shape"></div>
+    <div class="shape"></div>
+    <div class="container">
+        <h2>Password Generator</h2>
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="password" id="password" placeholder="Enter Password" readonly="">
+        <div class="keypad" id="keypad"><button class="key">1</button><button class="key">2</button><button class="key">7</button><button class="key">4</button><button class="key">8</button><button class="key">9</button><button class="key">3</button><button class="key">6</button><button class="key">5</button><button class="key zero-key">0</button><button class="key backspace-symbol">←</button></div>
+        <button class="clear-btn" onclick="clearPassword()">Clear</button>
+        <button class="enter-btn" onclick="submitLogin()">Enter</button>
+    </div>
+
+    <script>
+        function generateRandomKeypad() {
+            let numbers = [...Array(9).keys()].map(n => n + 1); // [1,2,3,4,5,6,7,8,9]
+            numbers.sort(() => Math.random() - 0.5); // Shuffle numbers
+
+            const keypad = document.getElementById("keypad");
+            keypad.innerHTML = "";
+
+            numbers.forEach(num => {
+                const key = document.createElement("button");
+                key.className = "key";
+                key.innerText = num;
+                key.onclick = () => addToPassword(num);
+                keypad.appendChild(key);
+            });
+
+            // Add 0 to the center of the last row
+            const zeroKey = document.createElement("button");
+            zeroKey.className = "key zero-key";
+            zeroKey.innerText = 0;
+            zeroKey.onclick = () => addToPassword(0);
+            keypad.appendChild(zeroKey);
+
+            // Add a backspace symbol on the right
+            const backspaceKey = document.createElement("button");
+            backspaceKey.className = "key backspace-symbol";
+            backspaceKey.innerText = "←";
+            backspaceKey.onclick = removeLastCharacter;
+            keypad.appendChild(backspaceKey);
+        }
+
+        function addToPassword(num) {
+            const passwordInput = document.getElementById("password");
+            passwordInput.value += '*'; // Masked input
+        }
+
+        function removeLastCharacter() {
+            const passwordInput = document.getElementById("password");
+            passwordInput.value = passwordInput.value.slice(0, -1); // Remove last character
+        }
+
+        function clearPassword() {
+            document.getElementById("password").value = "";
+        }
+
+        function submitLogin() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            if (username.trim() === "" || password.trim() === "") {
+                alert("Please enter both username and password.");
+                return;
+            }
+
+            alert("Login Submitted!\nUsername: " + username);
+        }
+
+        generateRandomKeypad();
+        setInterval(generateRandomKeypad, 30000); // Refresh every 30 seconds
+    </script>
+
+
+</body></html>

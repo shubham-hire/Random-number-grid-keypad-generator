@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Number Keypad Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Password Generator</h2>
+        <input type="text" id="username" placeholder="Enter Username">
+        <input type="password" id="password" placeholder="Enter Password" readonly>
+        <div class="keypad" id="keypad"></div>
+        <button class="clear-btn" onclick="clearPassword()">Clear</button>
+        <button class="enter-btn" onclick="submitLogin()">Enter</button>
+    </div>
+
+    <script>
+        let actualPassword = ""; // Stores actual user input
+
+        function generateRandomKeypad() {
+            let numbers = [...Array(9).keys()].map(n => n + 1); // [1,2,3,4,5,6,7,8,9]
+            numbers.sort(() => Math.random() - 0.5); // Shuffle numbers
+            
+            const keypad = document.getElementById("keypad");
+            keypad.innerHTML = "";
+
+            numbers.forEach((num, index) => {
+                const key = document.createElement("button");
+                key.className = "key";
+                key.innerText = num;
+                key.onclick = () => addToPassword(num);
+                keypad.appendChild(key);
+
+                // Insert '0' in the center of the last row (5th position in a 3x4 grid)
+                if (index === 4) {
+                    const zeroKey = document.createElement("button");
+                    zeroKey.className = "key zero-key";
+                    zeroKey.innerText = 0;
+                    zeroKey.onclick = () => addToPassword(0);
+                    keypad.appendChild(zeroKey);
+                }
+            });
+
+            // Add a backspace button at the end
+            const backspaceKey = document.createElement("button");
+            backspaceKey.className = "key backspace-symbol";
+            backspaceKey.innerText = "←";
+            backspaceKey.onclick = removeLastCharacter;
+            keypad.appendChild(backspaceKey);
+        }
+
+        function addToPassword(num) {
+            if (actualPassword.length < 4) {
+                actualPassword += num;
+                document.getElementById("password").value = "*".repeat(actualPassword.length);
+            }
+        }
+
+        function removeLastCharacter() {
+            actualPassword = actualPassword.slice(0, -1);
+            document.getElementById("password").value = "*".repeat(actualPassword.length);
+        }
+
+        function clearPassword() {
+            actualPassword = "";
+            document.getElementById("password").value = "";
+        }
+
+        function submitLogin() {
+            const username = document.getElementById("username").value;
+            if (username.trim() === "" || actualPassword === "") {
+                alert("Please enter both username and password.");
+                return;
+            }
+            alert(`Login Submitted!\nUsername: ${username}\nPassword: ${actualPassword}`);
+        }
+
+        generateRandomKeypad();
+        setInterval(generateRandomKeypad, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+</html>
